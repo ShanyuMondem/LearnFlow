@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Immersive Learning Platform</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&family=Montserrat:wght@300;400;700&display=swap"
+        rel="stylesheet">
+    
+        <link rel="shortcut icon" href="/logo-removebg-preview_copy.png" type="image/x-icon">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="shortcut icon" href="/logo-removebg-preview_copy.png" type="image/x-icon">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+            color: white;
+            text-align: center;
+            overflow-x: hidden;
+            /* Keep this to prevent horizontal scrolling */
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            position: fixed;
+            /* Fixed to the top */
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+            /* Ensure it stays on top */
+            background-color: transparent;
+            /* Initial transparent background */
+            transition: background-color 0.3s ease;
+            /* Smooth background transition */
+        }
+
+        .header-scrolled {
+            background-color: rgba(0, 0, 0, 0.5);
+            /* Semi-transparent black */
+            transition: background-color 0.3s ease;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+            padding: 0;
+            margin-right: 20px;
+            /* Push links to the right */
+        }
+
+        nav {
+            margin-right: 10px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: color 0.3s;
+            font-family: 'Montserrat', sans-serif;
+            cursor: pointer;
+        }
+
+        nav a:hover {
+            color: #ffcc00;
+        }
+
+        .logo {
+            margin-left: 20px;
+            /* Push logo to the left */
+        }
+
+        .logo-img{
+            height: 30px;
+        }
+
+        .logo-container{
+            display: flex;
+            min-width: 10vw;
+            justify-content: space-evenly;
+        }
+        .fullscreen-video {
+            width: 100%;
+            height: 100vh;
+            object-fit: cover;
+            position: relative;
+            /* For overlaying header */
+        }
+
+        .hero {
+            transition: opacity 0.5s ease-out;
+            padding-top: 100px;
+            /* Adjust padding to account for fixed header */
+            padding-bottom: 50px;
+            background: #333333;
+            color: white;
+            text-align: center;
+            /* Override body's text-align for hero content */
+            position: relative;
+            z-index: 1;
+            /* Ensure hero is on top of the video */
+            margin: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero h1,
+        .hero p,
+        .hero button, h1 {
+            text-align: center;
+            font-family: 'Montserrat', sans-serif;
+            /* Center the content within the hero */
+        }
+
+        button {
+            background-color: #ffcc00;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-family: 'Montserrat', sans-serif;
+            border-radius: 20px;
+        }
+
+        button:hover {
+            background-color: #e6b800;
+        }
+
+        .feature-section {
+            padding: 50px;
+            background: #333333;
+            margin: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            text-align: left;
+            padding-left: 80px;
+            padding-right: 80px;
+        }
+
+        .feature-section:nth-child(even) {
+            flex-direction: row;
+            text-align: right;
+        }
+
+        .feature-section img {
+            max-width: 300px;
+            height: auto;
+            border-radius: 8px;
+            /* Align image vertically in the center */
+            align-self: center;
+        }
+
+        .feature-section .text-content {
+            flex: 1;
+        }
+
+        .feature-section .image-content {
+            flex-shrink: 0;
+            margin-left: 40px;
+            margin-right: 40px;
+            /* Align content vertically in the center */
+            display: flex;
+            align-items: center;
+            justify-content: center; /* If the image is smaller than max-width */
+        }
+
+        .feature-section:nth-child(even) .image-content {
+            margin-left: 100px;
+            margin-right: 0;
+            justify-content: center; /* If the image is smaller than max-width */
+        }
+
+        .feature-section h2 {
+            margin-top: 0;
+            font-size: 2rem;
+        }
+
+        .feature-section p {
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+
+        .courses,
+        .community,
+        .dashboard,
+        .login {
+            padding: 50px;
+            background: #333333;
+            margin: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .course-filters input,
+        .course-filters select {
+            padding: 10px;
+            margin: 10px;
+            font-size: 1rem;
+        }
+
+        .video-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .video-container video {
+            width: 80%;
+            max-height: 500px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .login-form {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            width: 400px;
+            text-align: center;
+            z-index: 1000;
+        }
+
+        .login-form input,
+        .login-form select {
+            display: block;
+            width: 90%;
+            margin: 10px auto;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background: transparent;
+            color: black;
+        }
+
+        .login-form label {
+            font-weight: bold;
+            text-align: left;
+            display: block;
+            margin-left: 5%;
+        }
+
+        .close-btn {
+            background: red;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            border-radius: 50%;
+            font-size: 14px;
+            z-index: 1001;
+        }
+
+        .create-account {
+            margin-top: 15px;
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .create-account a {
+            color: #0073e6;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .create-account a:hover {
+            text-decoration: underline;
+        }
+
+        /* Intro Slide */
+        .intro-slide {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            z-index: 2000;
+            transition: opacity 1s ease, visibility 1s ease;
+            color: black;
+        }
+
+        .intro-slide img {
+            width: 150px;
+            height: auto;
+            margin-bottom: 1rem;
+            z-index: 2001;
+        }
+
+        .intro-slide h1 {
+            font-size: 3rem;
+            font-weight: bold;
+            font-family: 'Montserrat', sans-serif;
+            color: black;
+            z-index: 2001;
+        }
+
+        /* Fade-out effect */
+        .fade-out {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        #loginForm h2 {
+            color: black;
+            /* Blue color */
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const introSlide = document.querySelector(".intro-slide");
+            setTimeout(() => {
+                if (introSlide) {
+                    introSlide.classList.add("fade-out");
+                    setTimeout(() => {
+                        introSlide.style.display = "none";
+                    }, 1000);
+                }
+            }, 2000);
+
+            const header = document.querySelector('header');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) { // Adjust the scroll threshold as needed
+                    header.classList.add('header-scrolled');
+                } else {
+                    header.classList.remove('header-scrolled');
+                }
+            });
+        });
+        function showLoginForm() {
+            document.getElementById("loginForm").style.display = "block";
+        }
+        function hideLoginForm() {
+            document.getElementById("loginForm").style.display = "none";
+        }
+        function exploreCourses() {
+            alert("Explore immersive courses coming soon!");
+        }
+    </script>
+</head>
+
+<body>
+    <div class="intro-slide">
+        <img src="/logo-removebg-preview_copy.png" alt="Learnflow Logo">
+        <h1>LearnFlow</h1>
+    </div>
+
+    <header>
+        <div class="logo-container">
+            <img src="/logo-removebg-preview_copy.png" alt="Learnflow Logo" class="logo-img">
+            <div class="logo">Learnflow</div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/index.html">Home</a></li>
+                <li><a href="/coursesNew.html">Courses</a></li>
+                <li><a href="#community">Community</a></li>
+                <li><a href="/dashnoard.html">Dashboard</a></li>
+                <li><a onclick="showLoginForm()">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <video class="fullscreen-video" autoplay muted loop>
+        <source src="hero_bck.mp4" type="video/mp4">
+    </video>
+
+    <section class="feature-section">
+        <div class="image-content">
+            <img src="/medic.jpg" alt="Interactive Learning">
+        </div>
+        <div class="text-content">
+            <h2>Interactive Learning</h2>
+            <p>Engage with dynamic and interactive content that makes learning an active and enjoyable experience. Our
+                AR/VR modules provide hands-on practice and immediate feedback.</p>
+        </div>
+    </section>
+
+    <section class="feature-section">
+        <div class="text-content">
+            <h2>Immersive Experiences</h2>
+            <p>Step into virtual worlds and augmented realities that bring abstract concepts to life. Explore historical
+                sites, dissect virtual organisms, and conduct experiments without physical limitations.</p>
+        </div>
+        <div class="image-content">
+            <img src="/feature-1.jpg" alt="Immersive Experiences">
+        </div>
+    </section>
+
+    <section class="feature-section">
+        <div class="image-content">
+            <img src="/feature-3.webp" alt="Personalized Education">
+        </div>
+        <div class="text-content">
+            <h2>Personalized Education</h2>
+            <p>Tailor your learning journey to your individual needs and pace. Our platform adapts to your progress,
+                providing customized content and support to ensure your success.</p>
+        </div>
+    </section>
+
+    <section id="home" class="hero">
+        <h1>Transform Learning with AR/VR</h1>
+        <p>Empowering students and educators with immersive technology.</p>
+        <button onclick="exploreCourses()">Explore Courses</button>
+    </section>
+
+    <div class="video-container">
+        <video muted loop autoplay>
+            <source src="guide_bottom.mp4" type="video/mp4">
+        </video>
+    </div>
+
+    <section id="courses" class="courses">
+        <h2>Our Courses</h2>
+        <div class="course-filters">
+            <input type="text" placeholder="Search courses..." id="search-bar">
+            <select id="category-filter">
+                <option value="all">All Categories</option>
+                <option value="AR/VR">AR/VR</option>
+                <option value="Special Needs">Special Needs</option>
+                <option value="K-12">K-12</option>
+                <option value="Higher Ed">Higher Ed</option>
+                <option value="3D Modeling">3D Modeling</option>
+            </select>
+        </div>
+        <div class="course-list"></div>
+    </section>
+
+    <section id="community" class="community">
+        <h2>Join Our Learning Community</h2>
+        <p>Connect, discuss, and learn with peers and educators.</p>
+        <button onclick="joinForum()">Join the Discussion</button>
+    </section>
+
+    <div id="loginForm" class="login-form">
+        <button class="close-btn" onclick="hideLoginForm()">&times;</button>
+        <h2>Login</h2>
+        <input type="text" placeholder="Username">
+        <input type="password" placeholder="Password">
+        <button>Login</button>
+    </div>
+
+    <div class="create-account">
+        <p>Don't have an account? <a href="#">Create one</a></p>
+    </div>
+</body>
+
+</html>

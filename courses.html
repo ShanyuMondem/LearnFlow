@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore Courses - Immersive Learning Platform</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&family=Montserrat:wght@300;400;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+            color: white;
+            text-align: center;
+            overflow-x: hidden;
+            /* Keep this to prevent horizontal scrolling */
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            position: fixed;
+            /* Fixed to the top */
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+            /* Ensure it stays on top */
+            background-color: transparent;
+            /* Initial transparent background */
+            transition: background-color 0.3s ease;
+            /* Smooth background transition */
+        }
+
+        .header-scrolled {
+            background-color: rgba(0, 0, 0, 0.5);
+            /* Semi-transparent black */
+            transition: background-color 0.3s ease;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+            padding: 0;
+            margin-right: 20px;
+            /* Push links to the right */
+        }
+
+        nav {
+            margin-right: 10px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: color 0.3s;
+            font-family: 'Montserrat', sans-serif;
+            cursor: pointer;
+        }
+
+        nav a:hover {
+            color: #ffcc00;
+        }
+
+        .logo {
+            margin-left: 20px;
+            /* Push logo to the left */
+        }
+        logo-img{
+            height: 30px;
+        }
+
+        .logo-container{
+            display: flex;
+            min-width: 10vw;
+            justify-content: space-evenly;
+        }
+        .course-video-container {
+            padding-top: 80px; /* Adjust based on header height */
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .course-video-container video {
+            width: 80%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .course-offerings {
+            padding: 20px;
+            margin: 20px;
+            /* No background color to blend with main page */
+            position: relative;
+            z-index: 1;
+        }
+
+        .course-box {
+            background: #333333;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            text-align: left;
+        }
+
+        .course-box:nth-child(even) {
+            flex-direction: row;
+            text-align: right;
+        }
+
+        .course-box img {
+            max-width: 200px;
+            height: auto;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+
+        .course-box .course-info {
+            flex-grow: 1;
+        }
+
+        .course-box h3 {
+            margin-top: 0;
+            font-size: 1.5rem;
+        }
+
+        .course-box p {
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+
+        .course-box:nth-child(even) .course-info {
+            text-align: right;
+        }
+
+        .course-box:nth-child(even) img {
+            margin-left: 20px;
+            margin-right: 0;
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const header = document.querySelector('header');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    header.classList.add('header-scrolled');
+                } else {
+                    header.classList.remove('header-scrolled');
+                }
+            });
+        });
+        function showLoginForm() {
+            document.getElementById("loginForm").style.display = "block";
+        }
+        function hideLoginForm() {
+            document.getElementById("loginForm").style.display = "none";
+        }
+    </script>
+</head>
+
+<body>
+    <header>
+        <div class="logo">Learnflow</div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="/coursesNew.html">Courses</a></li>
+                <li><a href="index.html#community">Community</a></li>
+                <li><a href="/dashnoard.html">Dashboard</a></li>
+                <li><a onclick="showLoginForm()">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="course-video-container">
+        <video controls poster="/course_preview_placeholder.jpg">
+            <source src="/course_intro_video.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <div class="course-offerings">
+        <h2>Explore Our Immersive Courses</h2>
+
+        <div class="course-box">
+            <img src="images/develpandfunda.jpg" alt="AR/VR Development">
+            <div class="course-info">
+                <h3>AR/VR Development Fundamentals</h3>
+                <p>Dive into the exciting world of Augmented and Virtual Reality development. Learn the basics of
+                    creating immersive experiences using industry-leading tools and platforms. This course covers
+                    3D modeling, interaction design, and deployment strategies.</p>
+            </div>
+        </div>
+
+        <div class="course-box">
+            <div class="course-info">
+                <h3>Immersive Learning for Special Needs Education</h3>
+                <p>Discover how AR/VR can transform learning for students with special needs. Explore tailored
+                    applications and methodologies that enhance engagement, understanding, and skill development in a
+                    supportive virtual environment.</p>
+            </div>
+            <img src="/images/edu.jpg" alt="Special Needs Education">
+        </div>
+
+        <div class="course-box">
+            <img src="/images/science.jpg" alt="Interactive Science">
+            <div class="course-info">
+                <h3>Interactive Science with AR</h3>
+                <p>Bring science to life for K-12 students through engaging Augmented Reality lessons. This course
+                    provides educators with resources and techniques to create interactive learning experiences for
+                    subjects like biology, physics, and chemistry.</p>
+            </div>
+        </div>
+
+        <div class="course-box">
+            <div class="course-info">
+                <h3>3D Modeling for Immersive Environments</h3>
+                <p>Master the art of 3D modeling to create stunning assets for AR/VR applications. Learn essential
+                    software and techniques for designing and optimizing 3D objects and environments for immersive
+                    learning experiences.</p>
+            </div>
+            <img src="/images/3dmodel.jpg" alt="3D Modeling">
+        </div>
+
+        </div>
+
+    <div id="loginForm" class="login-form">
+        <button class="close-btn" onclick="hideLoginForm()">&times;</button>
+        <h2>Login</h2>
+        <input type="text" placeholder="Username">
+        <input type="password" placeholder="Password">
+        <button>Login</button>
+    </div>
+
+</body>
+
+</html>
